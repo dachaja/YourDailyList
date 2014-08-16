@@ -23,7 +23,7 @@
 		9429C605199CA9DC00B5F4A3 /* yourDailyListTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9429C604199CA9DC00B5F4A3 /* yourDailyListTests.m */; };
 		9429C60F199CA9FE00B5F4A3 /* loginWithFacebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 9429C60E199CA9FE00B5F4A3 /* loginWithFacebook.png */; };
 		94737636199DEED5005C6042 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94737635199DEED5005C6042 /* FacebookSDK.framework */; };
-		F62C61BB40814CDAA2964A0D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF5F538589C4DB69DD2D327 /* libPods.a */; };
+		94737639199F3A1B005C6042 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94737638199F3A1B005C6042 /* TableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +59,8 @@
 		9429C604199CA9DC00B5F4A3 /* yourDailyListTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yourDailyListTests.m; sourceTree = "<group>"; };
 		9429C60E199CA9FE00B5F4A3 /* loginWithFacebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginWithFacebook.png; sourceTree = "<group>"; };
 		94737635199DEED5005C6042 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
-		EDF5F538589C4DB69DD2D327 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		94737637199F3A1B005C6042 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		94737638199F3A1B005C6042 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +72,6 @@
 				94737636199DEED5005C6042 /* FacebookSDK.framework in Frameworks */,
 				9429C5DE199CA9DC00B5F4A3 /* UIKit.framework in Frameworks */,
 				9429C5DA199CA9DC00B5F4A3 /* Foundation.framework in Frameworks */,
-				F62C61BB40814CDAA2964A0D /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,7 +116,6 @@
 				9429C5DB199CA9DC00B5F4A3 /* CoreGraphics.framework */,
 				9429C5DD199CA9DC00B5F4A3 /* UIKit.framework */,
 				9429C5F8199CA9DC00B5F4A3 /* XCTest.framework */,
-				EDF5F538589C4DB69DD2D327 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -129,6 +128,8 @@
 				9429C5EB199CA9DC00B5F4A3 /* Main.storyboard */,
 				9429C5EE199CA9DC00B5F4A3 /* ViewController.h */,
 				9429C5EF199CA9DC00B5F4A3 /* ViewController.m */,
+				94737637199F3A1B005C6042 /* TableViewController.h */,
+				94737638199F3A1B005C6042 /* TableViewController.m */,
 				9429C5F1199CA9DC00B5F4A3 /* Images.xcassets */,
 				9429C5E0199CA9DC00B5F4A3 /* Supporting Files */,
 			);
@@ -301,6 +302,7 @@
 				9429C5F0199CA9DC00B5F4A3 /* ViewController.m in Sources */,
 				9429C5EA199CA9DC00B5F4A3 /* AppDelegate.m in Sources */,
 				9429C5E6199CA9DC00B5F4A3 /* main.m in Sources */,
+				94737639199F3A1B005C6042 /* TableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
