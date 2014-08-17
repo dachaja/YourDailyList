@@ -92,8 +92,29 @@
     
     cell.itemLabel.text = [_items objectAtIndex:indexPath.row];
     cell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
+    cell.checkImageView.tag = 0;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
+    [cell.checkImageView addGestureRecognizer:tap];
+    cell.checkImageView.userInteractionEnabled = YES;
     
     return cell;
+}
+
+#pragma mark - TapGestureRecognizer
+- (void) tapHandler:(UITapGestureRecognizer *)tapRecognizer {
+    CGPoint tapLocation = [tapRecognizer locationInView:self.tableView];
+    NSIndexPath *tappedIndexPath = [self.tableView indexPathForRowAtPoint:tapLocation];
+    
+    TableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:tappedIndexPath];
+    
+    if(selectedCell.checkImageView.tag == 0) {
+        selectedCell.checkImageView.image = [UIImage imageNamed:@"btn_checked.png"];
+        selectedCell.checkImageView.tag = 1;
+    } else {
+        selectedCell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
+        selectedCell.checkImageView.tag = 0;
+    }
 }
 
 #pragma mark - SWTableViewButtons
