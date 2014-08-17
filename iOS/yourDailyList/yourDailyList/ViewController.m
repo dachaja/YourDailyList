@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "TableViewController.h"
+#import "NavController.h"
 
 @interface ViewController ()
 
@@ -36,8 +37,11 @@
 #pragma mark - FBLoginViewDelegate
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
     NSLog(@"loginViewShowingLoggedInUser");
-    TableViewController *tableView = [[TableViewController alloc]init];
-    [self.view addSubview:tableView.view];
+    
+    NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
+    [self.view addSubview:navController.view];
+    [self addChildViewController:navController];
+    
 }
 
 

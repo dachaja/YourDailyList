@@ -7,6 +7,9 @@
 //
 
 #import "TableViewController.h"
+#import "TableViewCell.h"
+#import "SWTableViewCell.h"
+#import "ViewController.h"
 
 @interface TableViewController ()
 
@@ -27,11 +30,19 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    // Setup refresh control for example app
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(toggleCells:) forControlEvents:UIControlEventValueChanged];
+    refreshControl.tintColor = [UIColor blueColor];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView addSubview:refreshControl];
+    self.refreshControl = refreshControl;
+    
+    _items = [[NSMutableArray alloc] init];
+    [_items addObjectsFromArray:@[@"First",@"Second",@"Third",@"Fourth"]];
+
+    _useCustomCells = NO;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,32 +51,133 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - UIRefreshControl Selector
+- (void)toggleCells:(UIRefreshControl*)refreshControl {
+    [refreshControl beginRefreshing];
+    self.useCustomCells =! self.useCustomCells;
+    if (self.useCustomCells) {
+        self.refreshControl.tintColor = [UIColor yellowColor];
+    } else {
+        self.refreshControl.tintColor = [UIColor blueColor];
+    }
+    [self.tableView reloadData];
+    [refreshControl endRefreshing];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return _items.count;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    TableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TableCell"];
+
+    if(cell == nil) {
+        cell = [[TableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TableCell"];
+    }
     
-    // Configure the cell...
+    //[cell setLeftUtilityButtons:[self leftButtons]];
+    [cell setRightUtilityButtons:[self rightButtons]];
+    cell.delegate = self;
+    
+    cell.itemLabel.text = [_items objectAtIndex:indexPath.row];
+    cell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
     
     return cell;
 }
-*/
+
+#pragma mark - SWTableViewButtons
+
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+    [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                    title:@"Delete"];
+//    [rightUtilityButtons sw_addUtilityButtonWithColor:
+//    [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+//                                                    title:@"Delete"];
+    
+    return rightUtilityButtons;
+}
+
+#pragma mark - addNewItem
+- (IBAction)addNewItem:(id)sender {
+    UIAlertView *addNewItem = [[UIAlertView alloc] initWithTitle:@"New Item" message:@"" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    addNewItem.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [addNewItem show];
+    
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [_items addObject:[[alertView textFieldAtIndex:0] text]];
+    [self.tableView reloadData];
+}
+
+#pragma mark - SWTableViewDelegate
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
+{
+    switch (state) {
+        case 0:
+            NSLog(@"utility buttons closed");
+            break;
+        case 1:
+            NSLog(@"left utility buttons open");
+            break;
+        case 2:
+            NSLog(@"right utility buttons open");
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+            NSLog(@"left button 0 was pressed");
+            break;
+        case 1:
+            NSLog(@"left button 1 was pressed");
+            break;
+        case 2:
+            NSLog(@"left button 2 was pressed");
+            break;
+        case 3:
+            NSLog(@"left btton 3 was pressed");
+        default:
+            break;
+    }
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+        {
+            // Delete button was pressed
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+            
+            [_items removeObjectAtIndex:cellIndexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 
 /*
 // Override to support conditional editing of the table view.
