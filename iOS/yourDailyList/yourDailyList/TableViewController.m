@@ -140,28 +140,30 @@
     
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex==0) return;
+    
     [_items addObject:[[alertView textFieldAtIndex:0] text]];
     [self.tableView reloadData];
 }
 
 #pragma mark - SWTableViewDelegate
 
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
-{
-    switch (state) {
-        case 0:
-            NSLog(@"utility buttons closed");
-            break;
-        case 1:
-            NSLog(@"left utility buttons open");
-            break;
-        case 2:
-            NSLog(@"right utility buttons open");
-            break;
-        default:
-            break;
-    }
-}
+//- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
+//{
+//    switch (state) {
+//        case 0:
+//            NSLog(@"utility buttons closed");
+//            break;
+//        case 1:
+//            NSLog(@"left utility buttons open");
+//            break;
+//        case 2:
+//            NSLog(@"right utility buttons open");
+//            break;
+//        default:
+//            break;
+//    }
+//}
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
 {
