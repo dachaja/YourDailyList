@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "TableViewController.h"
 #import "NavController.h"
+#import <AFNetworking/AFNetworking.h>
 
 @interface ViewController ()
 
@@ -38,10 +39,50 @@
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
     NSLog(@"loginViewShowingLoggedInUser");
     
-    NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
-    [self.view addSubview:navController.view];
-    [self addChildViewController:navController];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *email = [defaults objectForKey:@"email"];
+    NSString *status = [defaults objectForKey:@"status"];
     
+    if(email != nil && [status isEqualToString:@"verifying"]) {
+        //Send email to WAS
+        AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary    *params = @{@"email": email, @"facebookAuth":@"true"};
+        manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+        [manager POST:@"http://127.0.0.1:9000/yourdailylist/v0/auth/" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"success %@",responseObject);
+            [defaults setObject:@"verified" forKey:@"status"];
+            [defaults synchronize];
+            
+            NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
+            [self.view addSubview:navController.view];
+            [self addChildViewController:navController];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"failure");
+        }];
+    
+        NSLog(@"%@", manager.baseURL.relativePath);
+    
+    } else {
+        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
+        [self.view addSubview:navController.view];
+        [self addChildViewController:navController];
+    }
+    
+}
+
+- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
+    NSLog(@"loginViewFetchedUserInfo");
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *email = [defaults objectForKey:@"email"];
+    if(![email isEqualToString:[user objectForKey:@"email"]]) {
+        [defaults setObject:[user objectForKey:@"email"] forKey:@"email"];
+        [defaults setObject:@"verifying" forKey:@"status"];
+        [defaults synchronize];
+    }
+
 }
 
 

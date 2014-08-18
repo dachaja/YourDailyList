@@ -11,8 +11,7 @@ import play.Logger;
 
 public class DBRecordCreation {
 
-	private SessionFactory sessionFactory = new Configuration().configure()
-			.buildSessionFactory();
+	private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 	private Session session = sessionFactory.openSession();
 	private Transaction transaction = session.beginTransaction();
 

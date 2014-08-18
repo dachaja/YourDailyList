@@ -6,8 +6,8 @@
 GET     /                           controllers.Application.index()
 
 # Your Daily List
-GET /yourdailylist/v0/auth/:email&:facebookAuth 		controllers.Authentication.auth(email: String, facebookAuth: String)
-#POST /yourdailylist/v0/auth/:email  		controllers.Authentication.auth(email: String)
+GET /yourdailylist/v0/auth/:email&:facebookAuth 		controllers.Authentication.authTest(email: String, facebookAuth: String)
+POST /yourdailylist/v0/auth/  		controllers.Authentication.auth()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
