@@ -10,6 +10,7 @@
 #import "TableViewCell.h"
 #import "SWTableViewCell.h"
 #import "ViewController.h"
+#import <AFNetworking/AFNetworking.h>
 
 @interface TableViewController ()
 
@@ -199,6 +200,13 @@
         default:
             break;
     }
+}
+
+#pragma mark - AFNetworking
+- (BOOL)readAllList {
+    AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
+    
+    return YES;
 }
 
 

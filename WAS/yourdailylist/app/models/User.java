@@ -1,7 +1,8 @@
 package models;
 
 import javax.persistence.*;
-import play.db.jpa.*;
+
+import play.db.jpa.JPA;
 
 @Entity
 public class User{
@@ -14,9 +15,16 @@ public class User{
 	public String password;
 	public String facebookAuth;
 	
+	public User() {
+		
+	}
+	
 	public User(String email, String facebookAuth) {
 		this.email = email;
 		this.facebookAuth = facebookAuth;
 	}
-
+	
+	public static User findByEmail(String email) {
+		return JPA.em().find(User.class, email);
+	}
 }

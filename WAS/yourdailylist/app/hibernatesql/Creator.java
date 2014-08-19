@@ -9,7 +9,7 @@ import org.hibernate.cfg.Configuration;
 
 import play.Logger;
 
-public class DBRecordCreation {
+public class Creator {
 
 	private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 	private Session session = sessionFactory.openSession();
@@ -21,6 +21,7 @@ public class DBRecordCreation {
 			User user = new User(email, facebookAuth);
 			session.save(user);
 			transaction.commit();
+			
 			return true;
 		} catch (Exception e) {
 			Logger.error(e.getMessage());

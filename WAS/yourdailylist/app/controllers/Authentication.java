@@ -1,10 +1,12 @@
 package controllers;
 
-import hibernatesql.DBRecordCreation;
+import hibernatesql.Creator;
+import hibernatesql.Searcher;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import models.User;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -30,7 +32,7 @@ public class Authentication extends Controller {
 	public static Result authTest(String email, String facebookAuth) {
 
 		try{			
-			DBRecordCreation dbRecordCreation = new DBRecordCreation();
+			Creator dbRecordCreation = new Creator();
 			dbRecordCreation.insertUser(email, facebookAuth);
 			
 			Map<String, String> jsonUser = new HashMap<String, String>();
@@ -54,16 +56,26 @@ public class Authentication extends Controller {
 			String email = values.get("email")[0];
 			String facebookAuth = values.get("facebookAuth")[0];
 			
-			DBRecordCreation dbRecordCreation = new DBRecordCreation();
-			dbRecordCreation.insertUser(email, facebookAuth);
+			Searcher searcher = new Searcher();
+			User user = searcher.getUser(email);
+			
+			if(user==null) {
+				Creator creator = new Creator();
+				creator.insertUser(email, facebookAuth);
+				
+				user = searcher.getUser(email);
+			}
 			
 			Map<String, String> jsonUser = new HashMap<String, String>();
-			jsonUser.put("email", email);
-			jsonUser.put("facebookAuth", facebookAuth);
+			jsonUser.put("email", user.email);
+			jsonUser.put("facebookAuth", user.facebookAuth);
+			jsonUser.put("userId", user.userId + "");
 			
-			Logger.info(email + " " + facebookAuth);
+			Logger.info(user.email + " " + user.facebookAuth + " " + user.userId);
 			
 			return ok(play.libs.Json.toJson(jsonUser));
+			
+//			return ok();
 		} catch(Exception e) {
 			return ok(e.getMessage());
 		}		
