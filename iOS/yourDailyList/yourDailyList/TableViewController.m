@@ -203,10 +203,26 @@
 }
 
 #pragma mark - AFNetworking
-- (BOOL)readAllList {
-    AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
+- (void)readAllList {
+    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+    NSString    *userId = [defaults objectForKey:@"userId"];
     
-    return YES;
+    AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary    *params = @{@"userId":userId};
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [manager GET:@"http://127.0.0.1:9000/yourdailylist/v0/list/"
+            parameters:params
+            success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
+                
+                // Core Data.
+                
+                // Update table view
+
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
 }
 
 

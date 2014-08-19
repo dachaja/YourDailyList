@@ -107,28 +107,26 @@
     NSDictionary    *params = @{@"email": email, @"facebookAuth":@"true"};
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     
-    [manager POST:@"http://127.0.0.1:9000/yourdailylist/v0/auth/" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager POST:@"http://127.0.0.1:9000/yourdailylist/v0/auth/"
+            parameters:params
+            success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        NSLog(@"%@",responseObject);
+                NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
+
+                NSLog(@"success %@",responseObject);
+                [defaults setObject:[dictionary objectForKey:@"email"] forKey:@"email"];
+                [defaults setObject:[dictionary objectForKey:@"userId"]  forKey:@"userId"];
+                [defaults synchronize];
         
-        NSMutableDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
+                // Go to TableView
+                NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
+                [self.view addSubview:navController.view];
+                [self addChildViewController:navController];
         
-        //NSMutableArray *arr = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
-        //NSDictionary *dictionary = [arr objectAtIndex:0];
-        
-        NSLog(@"success %@",responseObject);
-        [defaults setObject:[dictionary objectForKey:@"email"] forKey:@"email"];
-        [defaults setObject:[dictionary objectForKey:@"userId"]  forKey:@"userId"];
-        [defaults synchronize];
-        
-        NavController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavController"];
-        [self.view addSubview:navController.view];
-        [self addChildViewController:navController];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"failure");
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"failure");
     }];
     
-    NSLog(@"%@", manager.baseURL.relativePath);
 }
 
 
