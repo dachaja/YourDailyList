@@ -24,28 +24,10 @@ import play.db.jpa.JPA;
 public class Authentication extends Controller {
 	/**
 	 *	Create a user to DB.
-	 *	@param - n/a
+	 *	@param - String email, String facebookAuth
 	 *	@throws - n/a
 	 *	@return json format 
 	 */
-	@play.db.jpa.Transactional
-	public static Result authTest(String email, String facebookAuth) {
-
-		try{			
-			Creator dbRecordCreation = new Creator();
-			dbRecordCreation.insertUser(email, facebookAuth);
-			
-			Map<String, String> jsonUser = new HashMap<String, String>();
-			jsonUser.put("email", email);
-			jsonUser.put("facebookAuth", facebookAuth);
-			
-			Logger.info(email + " " + facebookAuth);
-			
-			return ok(play.libs.Json.toJson(jsonUser));
-		} catch(Exception e) {
-			return ok(e.getMessage());
-		}		
-	}
 	
 	@play.db.jpa.Transactional
 	public static Result auth() {

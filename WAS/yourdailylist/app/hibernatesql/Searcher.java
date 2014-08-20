@@ -29,4 +29,20 @@ public class Searcher {
 			return null;
 		}
 	}
+	
+	public List<models.List> readAllList(int userId) {
+		String getAllList = "FROM List l WHERE l.userId = :userId ORDER BY listId";
+		try {
+			Query query = JPA.em().createQuery(getAllList);
+			query.setParameter("userId", userId);
+			
+			List<models.List> result = query.getResultList();
+			Logger.debug("list size" + result.size());
+			
+			return result;
+			
+		} catch(Exception e) {
+			return null;
+		}
+	}
 }

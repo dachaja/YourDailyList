@@ -44,6 +44,8 @@
 
     _useCustomCells = NO;
     
+    [self readAllList];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -145,6 +147,8 @@
     
     [_items addObject:[[alertView textFieldAtIndex:0] text]];
     [self.tableView reloadData];
+    
+    [self createList:[[alertView textFieldAtIndex:0] text]];
 }
 
 #pragma mark - SWTableViewDelegate
@@ -203,27 +207,57 @@
 }
 
 #pragma mark - AFNetworking
-- (void)readAllList {
+- (void) readAllList {
     NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
     NSString    *userId = [defaults objectForKey:@"userId"];
     
     AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
     NSDictionary    *params = @{@"userId":userId};
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/%@", userId];
     
-    [manager GET:@"http://127.0.0.1:9000/yourdailylist/v0/list/"
-            parameters:params
+    [manager GET:url
+            parameters:nil
             success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
                 
                 // Core Data.
-                
-                // Update table view
+                if ([dictionary count] > 0) {
+                    // Update table view
+                }
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
     }];
 }
+
+- (void) createList:(NSString *)title {
+    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
+    NSString    *userId = [defaults objectForKey:@"userId"];
+    
+    AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary    *params = @{@"userId":userId, @"title":title};
+    
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/"];
+    
+    [manager POST:url
+            parameters:params
+            success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
+             
+                NSString   *result = [dictionary objectForKey:@"createList"];
+                if([result isEqualToString:@"sucess"]) {
+                    NSLog(@"Create a list successfully.");
+                } else {
+                    NSLog(@"Failed to create a list");
+                }
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             
+         }];
+}
+
+#pragma mark - Core Data Handler
 
 
 /*

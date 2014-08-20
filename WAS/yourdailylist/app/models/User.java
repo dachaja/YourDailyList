@@ -1,7 +1,6 @@
 package models;
 
 import javax.persistence.*;
-
 import play.db.jpa.JPA;
 
 @Entity
@@ -17,6 +16,10 @@ public class User{
 	
 	public User() {
 		
+	}
+	
+	public User(int userId) {
+		this.userId = userId;
 	}
 	
 	public User(String email, String facebookAuth) {
