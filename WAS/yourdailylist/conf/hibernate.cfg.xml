@@ -18,6 +18,7 @@
     <property name="hibernate.show_sql">true</property>
     
     <mapping class="models.User"/>
+    <mapping class="models.List"/>
   </session-factory>
 
 </hibernate-configuration>
