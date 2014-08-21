@@ -1,0 +1,11 @@
+﻿create table User ( userId int(10) primary key auto_increment not null,
+email varchar(30) unique not null,
+password varchar(16),
+facebookAuth varchar(100));
+
+
+create table List ( listId int(10) primary key auto_increment not null,
+userId int(10),
+title varchar(100),
+mark varchar(5),
+foreign key(userId) references User(userId));
