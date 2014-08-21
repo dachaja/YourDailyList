@@ -11,9 +11,16 @@
 #import "SWTableViewCell.h"
 #import "ViewController.h"
 #import <AFNetworking/AFNetworking.h>
+#import "List.h"
+#import "User.h"
+#import "AppDelegate.h"
 
 @interface TableViewController ()
 
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSArray   *fetchedUserArray;
+@property (nonatomic, strong) NSArray   *fetchedListArray;
+@property (nonatomic, strong) NSFetchedResultsController        *fetchedResultsController;
 @end
 
 @implementation TableViewController
@@ -31,6 +38,20 @@
 {
     [super viewDidLoad];
     
+    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    self.managedObjectContext = appDelegate.managedObjectContext;
+    self.fetchedResultsController = appDelegate.fetchedResultsController;
+    
+    //Fetching Users, Lists
+    self.fetchedUserArray = [appDelegate getUserEntity];
+    self.fetchedListArray = [appDelegate getListEntity];
+    
+    self.items = [[NSMutableArray alloc] init];
+    for(List *list in self.fetchedListArray) {
+        [self.items addObject:list];
+    }
+    
+    
     // Setup refresh control for example app
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(toggleCells:) forControlEvents:UIControlEventValueChanged];
@@ -39,9 +60,7 @@
     [self.tableView addSubview:refreshControl];
     self.refreshControl = refreshControl;
     
-    _items = [[NSMutableArray alloc] init];
-    [_items addObjectsFromArray:@[@"First",@"Second",@"Third",@"Fourth"]];
-
+    //_items = [[NSMutableArray alloc] init];
     _useCustomCells = NO;
     
     [self readAllList];
@@ -78,7 +97,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return _items.count;
+    return [self.items count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -93,8 +112,13 @@
     [cell setRightUtilityButtons:[self rightButtons]];
     cell.delegate = self;
     
-    cell.itemLabel.text = [_items objectAtIndex:indexPath.row];
-    cell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
+    List *list = [self.items objectAtIndex:indexPath.row];
+    
+    cell.itemLabel.text = list.title;
+    if([list.mark isEqualToString:@"YES"])
+        cell.checkImageView.image = [UIImage imageNamed:@"btn_checked.png"];
+    else
+        cell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
     cell.checkImageView.tag = 0;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
@@ -110,13 +134,16 @@
     NSIndexPath *tappedIndexPath = [self.tableView indexPathForRowAtPoint:tapLocation];
     
     TableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:tappedIndexPath];
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:selectedCell];
     
     if(selectedCell.checkImageView.tag == 0) {
         selectedCell.checkImageView.image = [UIImage imageNamed:@"btn_checked.png"];
         selectedCell.checkImageView.tag = 1;
+        [self updateListEntryWithMark:@"YES" indexPath:cellIndexPath];
     } else {
         selectedCell.checkImageView.image = [UIImage imageNamed:@"btn_unchecked.png"];
         selectedCell.checkImageView.tag = 0;
+        [self updateListEntryWithMark:@"NO" indexPath:cellIndexPath];
     }
 }
 
@@ -144,11 +171,11 @@
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(buttonIndex==0) return;
+    NSString    *title = [[alertView textFieldAtIndex:0] text];
     
-    [_items addObject:[[alertView textFieldAtIndex:0] text]];
+    [self addListEntryWithTitle:title];
     [self.tableView reloadData];
-    
-    [self createList:[[alertView textFieldAtIndex:0] text]];
+    [self createList:title];
 }
 
 #pragma mark - SWTableViewDelegate
@@ -197,7 +224,11 @@
             // Delete button was pressed
             NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
             
-            [_items removeObjectAtIndex:cellIndexPath.row];
+            List *selectedList = [self.fetchedListArray objectAtIndex:index];
+            [self.managedObjectContext deleteObject:selectedList];
+            [self.managedObjectContext save:nil];
+            
+            [self.items removeObjectAtIndex:cellIndexPath.row];
             [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
             break;
         }
@@ -208,22 +239,32 @@
 
 #pragma mark - AFNetworking
 - (void) readAllList {
-    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
-    NSString    *userId = [defaults objectForKey:@"userId"];
+    User *userEntity = [self.fetchedUserArray objectAtIndex:0];
     
+    //GET
     AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary    *params = @{@"userId":userId};
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/%@", userId];
+    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/%@", userEntity.userId];
     
     [manager GET:url
             parameters:nil
             success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableContainers error:nil];
-                
-                // Core Data.
+                NSLog(@"%@", responseObject);
                 if ([dictionary count] > 0) {
-                    // Update table view
+                    // Delete previous Core Data
+                    for(List *entity in self.fetchedListArray) {
+                        [self.managedObjectContext deleteObject:entity];
+                    }
+                    [self.managedObjectContext save:nil];
+                    [self.items removeAllObjects];
+                    
+                    // Update Table view
+                    for (NSDictionary *list in dictionary) {
+                        [self addListEntryWithAll:list];
+                    }
+                    [self.tableView reloadData];
+                    // Core Data.
                 }
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -232,12 +273,12 @@
 }
 
 - (void) createList:(NSString *)title {
-    NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
-    NSString    *userId = [defaults objectForKey:@"userId"];
+    User *userEntity = [self.fetchedUserArray objectAtIndex:0];
+    NSString    *userId = userEntity.userId;
     
     AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary    *params = @{@"userId":userId, @"title":title};
-    
+    NSDictionary    *params = @{@"userId":userId, @"title":title, @"mark":@"NO"};
+   
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/"];
     
@@ -255,10 +296,39 @@
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              
          }];
+    
+    // Update Core Data.
 }
 
 #pragma mark - Core Data Handler
+- (void) addListEntryWithTitle:(NSString *)title {
+    List    *newList = [NSEntityDescription insertNewObjectForEntityForName:@"List" inManagedObjectContext:self.managedObjectContext];
+    newList.title = title;
+    
+    User    *userEntity = [self.fetchedUserArray objectAtIndex:0];
+    newList.userId = [NSString stringWithFormat:@"%@",userEntity.userId];
+    newList.mark = NO;
+    
+    [self.managedObjectContext save:nil];
+    [self.items addObject:newList];
+    
+    [self.tableView reloadData];
+}
 
+- (void) addListEntryWithAll:(NSDictionary *)dic {
+    List    *newList = [NSEntityDescription insertNewObjectForEntityForName:@"List" inManagedObjectContext:self.managedObjectContext];
+    newList.title = [dic objectForKey:@"title"];
+    newList.userId = [NSString stringWithFormat:@"%@", [dic objectForKey:@"userId"]];
+    newList.listId =[NSString stringWithFormat:@"%@", [dic objectForKey:@"listId"]];
+    newList.mark = [dic objectForKey:@"mark"];
+    
+    [self.managedObjectContext save:nil];
+    [self.items addObject:newList];
+}
+
+- (void) updateListEntryWithMark:(NSString *) mark indexPath:(NSIndexPath *)indexPath{
+    //upate mark.
+}
 
 /*
 // Override to support conditional editing of the table view.

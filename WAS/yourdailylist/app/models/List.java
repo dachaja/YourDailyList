@@ -13,12 +13,17 @@ public class List {
 	public Integer listId;
 	public String title;
 	@GeneratedValue(generator="")
-	public String content;
+	public String mark;
 	public Integer userId;
 	
-	public List(int userId, String title) {
+	public List() {
+		
+	}
+	
+	public List(int userId, String title, String mark) {
 		this.userId = userId;
 		this.title = title;
+		this.mark = mark;
 	}
 	
 }

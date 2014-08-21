@@ -30,6 +30,10 @@
 		9473768619A06CD0005C6042 /* btn_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 9473768419A06CD0005C6042 /* btn_checked.png */; };
 		9473768819A07F06005C6042 /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9473768719A07F06005C6042 /* check@2x.png */; };
 		9473768B19A092FB005C6042 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9473768A19A092FB005C6042 /* NavController.m */; };
+		9473768D19A59A5B005C6042 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9473768C19A59A5B005C6042 /* CoreData.framework */; };
+		9473769019A59A7C005C6042 /* List.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9473768E19A59A7C005C6042 /* List.xcdatamodeld */; };
+		9473769319A59E80005C6042 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = 9473769219A59E80005C6042 /* List.m */; };
+		9473769619A59E81005C6042 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 9473769519A59E81005C6042 /* User.m */; };
 		F92D4BE779D446DA80868B92 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 253D419D64824204AE4A0BA0 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +81,12 @@
 		9473768719A07F06005C6042 /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
 		9473768919A092FB005C6042 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
 		9473768A19A092FB005C6042 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
+		9473768C19A59A5B005C6042 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9473768F19A59A7C005C6042 /* List.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = List.xcdatamodel; sourceTree = "<group>"; };
+		9473769119A59E80005C6042 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		9473769219A59E80005C6042 /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
+		9473769419A59E81005C6042 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		9473769519A59E81005C6042 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9473768D19A59A5B005C6042 /* CoreData.framework in Frameworks */,
 				9429C5DC199CA9DC00B5F4A3 /* CoreGraphics.framework in Frameworks */,
 				94737636199DEED5005C6042 /* FacebookSDK.framework in Frameworks */,
 				9429C5DE199CA9DC00B5F4A3 /* UIKit.framework in Frameworks */,
@@ -128,6 +139,7 @@
 		9429C5D8199CA9DC00B5F4A3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9473768C19A59A5B005C6042 /* CoreData.framework */,
 				94737635199DEED5005C6042 /* FacebookSDK.framework */,
 				9429C5D9199CA9DC00B5F4A3 /* Foundation.framework */,
 				9429C5DB199CA9DC00B5F4A3 /* CoreGraphics.framework */,
@@ -149,6 +161,11 @@
 				94737637199F3A1B005C6042 /* TableViewController.h */,
 				94737638199F3A1B005C6042 /* TableViewController.m */,
 				9429C5F1199CA9DC00B5F4A3 /* Images.xcassets */,
+				9473768E19A59A7C005C6042 /* List.xcdatamodeld */,
+				9473769419A59E81005C6042 /* User.h */,
+				9473769519A59E81005C6042 /* User.m */,
+				9473769119A59E80005C6042 /* List.h */,
+				9473769219A59E80005C6042 /* List.m */,
 				9429C5E0199CA9DC00B5F4A3 /* Supporting Files */,
 				9473763A19A0282E005C6042 /* TableViewCell.h */,
 				9473763B19A0282E005C6042 /* TableViewCell.m */,
@@ -329,10 +346,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9473769019A59A7C005C6042 /* List.xcdatamodeld in Sources */,
 				9429C5F0199CA9DC00B5F4A3 /* ViewController.m in Sources */,
+				9473769619A59E81005C6042 /* User.m in Sources */,
 				9429C5EA199CA9DC00B5F4A3 /* AppDelegate.m in Sources */,
 				9429C5E6199CA9DC00B5F4A3 /* main.m in Sources */,
 				9473768B19A092FB005C6042 /* NavController.m in Sources */,
+				9473769319A59E80005C6042 /* List.m in Sources */,
 				9473763C19A0282E005C6042 /* TableViewCell.m in Sources */,
 				94737639199F3A1B005C6042 /* TableViewController.m in Sources */,
 			);
@@ -561,6 +581,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9473768E19A59A7C005C6042 /* List.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9473768F19A59A7C005C6042 /* List.xcdatamodel */,
+			);
+			currentVersion = 9473768F19A59A7C005C6042 /* List.xcdatamodel */;
+			name = List.xcdatamodeld;
+			path = ../List.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9429C5CE199CA9DC00B5F4A3 /* Project object */;
 }

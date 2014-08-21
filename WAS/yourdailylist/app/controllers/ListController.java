@@ -19,17 +19,8 @@ public class ListController extends Controller{
 			Searcher searcher = new Searcher();
 			List<models.List> result = (List<models.List>) searcher.readAllList(userId);
 			
-			if(result != null) {
-				Map<String, String> lists = new HashMap<String, String>();
-				for (models.List list : result) {
-					lists.put("listId",list.listId + "");
-					lists.put("title", list.title);
-					lists.put("content", list.content);
-				}
-				return ok(play.libs.Json.toJson(lists));
-			} else {
-				return ok();
-			}
+			return ok(play.libs.Json.toJson(result));
+			
 		} catch(Exception e) {
 			
 		}
@@ -44,9 +35,10 @@ public class ListController extends Controller{
 			final Map<String, String[]> values = request().body().asFormUrlEncoded();
 			int userId = Integer.parseInt(values.get("userId")[0]);
 			String title = values.get("title")[0];
+			String mark = values.get("mark")[0];
 			
 			Creator creator = new Creator();
-			Boolean result = creator.insertListTitleByUserId(userId, title);
+			Boolean result = creator.insertListTitleByUserId(userId, title, mark);
 			
 			Map<String, String> list = new HashMap<String, String>();
 			

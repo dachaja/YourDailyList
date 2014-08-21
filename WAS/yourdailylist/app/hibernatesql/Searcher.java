@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import models.User;
+import models.*;
 import play.Logger;
 import play.db.jpa.JPA;
 
@@ -31,7 +31,7 @@ public class Searcher {
 	}
 	
 	public List<models.List> readAllList(int userId) {
-		String getAllList = "FROM List l WHERE l.userId = :userId ORDER BY listId";
+		String getAllList = "FROM List l WHERE l.userId = :userId ORDER BY l.listId";
 		try {
 			Query query = JPA.em().createQuery(getAllList);
 			query.setParameter("userId", userId);
@@ -42,6 +42,7 @@ public class Searcher {
 			return result;
 			
 		} catch(Exception e) {
+			Logger.debug(e.getMessage());
 			return null;
 		}
 	}

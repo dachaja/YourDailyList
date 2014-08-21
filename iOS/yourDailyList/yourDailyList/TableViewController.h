@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SWTableViewCell.h"
 
-@interface TableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate,SWTableViewCellDelegate>
+@interface TableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, strong)   NSMutableArray *items;
+//@property (nonatomic, strong)   NSMutableArray *items;
 @property (nonatomic)           BOOL useCustomCells;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *btnAdd;
+@property (nonatomic, strong)   NSMutableArray  *items;
 
 @end
 

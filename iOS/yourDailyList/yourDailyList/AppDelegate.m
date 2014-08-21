@@ -11,6 +11,11 @@
 
 @implementation AppDelegate
 
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize managedObjectModel   = _managedObjectModel;
+@synthesize persistentStoreCoordinator  = _persistentStoreCoordinator;
+@synthesize fetchedResultsController = _fetchedResultsController;
+
 // FBSample logic
 // If we have a valid session at the time of openURL call, we handle Facebook transitions
 // by passing the url argument to handleOpenURL; see the "Just Login" sample application for
@@ -71,6 +76,71 @@
     // FBSample logic
     // if the app is going away, we close the session object
     [FBSession.activeSession close];
+}
+
+#pragma mark - Core Data Handler.
+- (NSManagedObjectContext *)managedObjectContext {
+    if(_managedObjectContext != nil) {
+        return _managedObjectContext;
+    }
+    
+    NSPersistentStoreCoordinator    *coordinator = [self persistentStoreCoordinator];
+    if(coordinator != nil) {
+        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    return _managedObjectContext;
+}
+- (NSManagedObjectModel *)managedObjectModel {
+    if(_managedObjectModel != nil) {
+        return _managedObjectModel;
+    }
+    _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    return _managedObjectModel;
+}
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+    if(_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
+    }
+    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"List.sqlite"]];
+    NSError *error = nil;
+    
+    NSDictionary    *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+                                [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    if(![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) {
+        // Error for store creation should be handled in here.
+    }
+    return _persistentStoreCoordinator;
+}
+- (NSString *)applicationDocumentsDirectory {
+    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+}
+
+- (NSArray *)getUserEntity {
+    NSFetchRequest  *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *userEntity = [NSEntityDescription entityForName:@"User" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:userEntity];
+    
+    NSArray *fetchedUsers = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    
+    return fetchedUsers;
+}
+
+- (NSArray *)getListEntity {
+    NSFetchRequest  *fetchRequest = [[NSFetchRequest alloc] init];
+    NSSortDescriptor    *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"listId" ascending:YES];
+    NSArray         *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    
+    NSEntityDescription *listEntity = [NSEntityDescription entityForName:@"List" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:listEntity];
+    [fetchRequest setSortDescriptors:sortDescriptors];;
+    
+    NSArray *fetchedLists = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    
+    return fetchedLists;
 }
 
 @end
