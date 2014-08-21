@@ -166,11 +166,11 @@
 				9473769519A59E81005C6042 /* User.m */,
 				9473769119A59E80005C6042 /* List.h */,
 				9473769219A59E80005C6042 /* List.m */,
-				9429C5E0199CA9DC00B5F4A3 /* Supporting Files */,
 				9473763A19A0282E005C6042 /* TableViewCell.h */,
 				9473763B19A0282E005C6042 /* TableViewCell.m */,
 				9473768919A092FB005C6042 /* NavController.h */,
 				9473768A19A092FB005C6042 /* NavController.m */,
+				9429C5E0199CA9DC00B5F4A3 /* Supporting Files */,
 			);
 			path = yourDailyList;
 			sourceTree = "<group>";

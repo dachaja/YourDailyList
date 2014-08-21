@@ -93,7 +93,7 @@
     NSDictionary    *params = @{@"email": email, @"facebookAuth":@"true"};
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     
-    [manager POST:@"http://127.0.0.1:9000/yourdailylist/v0/auth/"
+    [manager POST:@"http://54.191.234.40:9000/yourdailylist/v0/auth/"
             parameters:params
             success:^(AFHTTPRequestOperation *operation, id responseObject) {
         

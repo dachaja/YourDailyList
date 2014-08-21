@@ -244,7 +244,7 @@
     //GET
     AFHTTPRequestOperationManager   *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/%@", userEntity.userId];
+    NSString    *url    = [NSString stringWithFormat:@"http://54.191.234.40:9000/yourdailylist/v0/list/%@", userEntity.userId];
     
     [manager GET:url
             parameters:nil
@@ -280,7 +280,7 @@
     NSDictionary    *params = @{@"userId":userId, @"title":title, @"mark":@"NO"};
    
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSString    *url    = [NSString stringWithFormat:@"http://127.0.0.1:9000/yourdailylist/v0/list/"];
+    NSString    *url    = [NSString stringWithFormat:@"http://54.191.234.40:9000/yourdailylist/v0/list/"];
     
     [manager POST:url
             parameters:params
